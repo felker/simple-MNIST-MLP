@@ -32,9 +32,10 @@ b2 = tf.Variable(tf.zeros(Y.shape[1], dtype=tf.float32), name='b2')
 
 
 def train_step(inputs, labels):
+    #with tf.GradientTape(persistent=True) as tape:  (only if calling tape after tape.gradient())
     with tf.GradientTape() as tape:
         y1 = tf.nn.relu(tf.matmul(inputs, tf.transpose(w1)) + b1)
-        y2 = y1 @ tf.transpose(w2)) + b2
+        y2 = y1 @ tf.transpose(w2) + b2
         prediction = tf.nn.softmax(logits=y2)
 
         # cross-entropy error:
@@ -63,7 +64,9 @@ for step in range(total_steps):
 
     loss, dl_dw1, dl_dw2, dl_db1, dl_db2 = train_step(x, y)
     print(f'step: {step} loss: {loss:.3f}')
-    # print(tf.math.reduce_max(dl_dw1))
+    print(tf.math.reduce_max(dl_dw1))
+    # tf.print(dl_dw1, summarize=-1)
+    #print(w1.trainable)
     apply_grads(dl_dw1, dl_dw2, dl_db1, dl_db2, learning_rate)
 
 # TensorFlow reminder:
