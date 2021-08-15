@@ -32,39 +32,39 @@ b2 = tf.Variable(tf.zeros(Y.shape[1], dtype=tf.float32), name='b2')
 
 
 def train_step(inputs, labels):
-  with tf.GradientTape() as tape:
-    y1 = tf.nn.relu(tf.matmul(inputs, tf.transpose(w1)) + b1)
-    y2 = tf.matmul(y1, tf.transpose(w2)) + b2
-    prediction = tf.nn.softmax(logits=y2)
+    with tf.GradientTape() as tape:
+        y1 = tf.nn.relu(tf.matmul(inputs, tf.transpose(w1)) + b1)
+        y2 = y1 @ tf.transpose(w2)) + b2
+        prediction = tf.nn.softmax(logits=y2)
 
-    # cross-entropy error:
-    # https://datascience.stackexchange.com/questions/9302/the-cross-entropy-error-function-in-neural-networks
-    # max(y_hat, eps) might not be necessary if ReLU is replaced with Sigmoid
-    loss = tf.reduce_mean(-tf.reduce_sum(labels * tf.math.log(tf.math.maximum(prediction, 1e-15)), axis=-1))
+        # cross-entropy error:
+        # https://datascience.stackexchange.com/questions/9302/the-cross-entropy-error-function-in-neural-networks
+        # max(y_hat, eps) might not be necessary if ReLU is replaced with Sigmoid
+        loss = tf.reduce_mean(-tf.reduce_sum(labels * tf.math.log(tf.math.maximum(prediction, 1e-15)), axis=-1))
 
-  dl_dw1, dl_dw2, dl_db1, dl_db2 = tape.gradient(loss, [w1, w2, b1, b2])
-  #print(dl_dw1, dl_dw2, dl_db1, dl_db2)
-  return loss, dl_dw1, dl_dw2, dl_db1, dl_db2
+    dl_dw1, dl_dw2, dl_db1, dl_db2 = tape.gradient(loss, [w1, w2, b1, b2])
+    print(dl_dw1, dl_dw2, dl_db1, dl_db2)
+    return loss, dl_dw1, dl_dw2, dl_db1, dl_db2
 
 
 def apply_grads(dl_dw1, dl_dw2, dl_db1, dl_db2, learning_rate):
-  global w1, w2, b1, b2
-  w1 = w1 - learning_rate * dl_dw1
-  w2 = w2 - learning_rate * dl_dw2
-  b1 = b1 - learning_rate * dl_db1
-  b2 = b2 - learning_rate * dl_db2
+    global w1, w2, b1, b2
+    w1 = w1 - learning_rate * dl_dw1
+    w2 = w2 - learning_rate * dl_dw2
+    b1 = b1 - learning_rate * dl_db1
+    b2 = b2 - learning_rate * dl_db2
 
 
 total_steps = int(X.shape[0] / batch_size)
 
 for step in range(total_steps):
-  x = X[step*batch_size:(step+1)*batch_size]
-  y = Y[step*batch_size:(step+1)*batch_size]
+    x = X[step*batch_size:(step+1)*batch_size]
+    y = Y[step*batch_size:(step+1)*batch_size]
 
-  loss, dl_dw1, dl_dw2, dl_db1, dl_db2 = train_step(x, y)
-  print(f'step: {step} loss: {loss:.3f}')
-  # print(tf.math.reduce_max(dl_dw1))
-  apply_grads(dl_dw1, dl_dw2, dl_db1, dl_db2, learning_rate)
+    loss, dl_dw1, dl_dw2, dl_db1, dl_db2 = train_step(x, y)
+    print(f'step: {step} loss: {loss:.3f}')
+    # print(tf.math.reduce_max(dl_dw1))
+    apply_grads(dl_dw1, dl_dw2, dl_db1, dl_db2, learning_rate)
 
 # TensorFlow reminder:
 # print(a + b, "\n") # element-wise addition
