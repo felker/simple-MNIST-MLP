@@ -54,5 +54,5 @@ for step in range(total_steps):
 
     loss, grads = train_step(x, y, model)
     print(f'step: {step} loss: {loss:.3f}')
-    print(tf.math.reduce_max(grads[0]))
+    #print(tf.math.reduce_max(grads[0]))
     opt.apply_gradients(zip(grads, model.trainable_variables))

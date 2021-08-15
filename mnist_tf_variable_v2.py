@@ -58,5 +58,5 @@ for step in range(total_steps):
 
   opt.apply_gradients(zip([dl_dw1, dl_dw2, dl_db1, dl_db2], [w1, w2, b1, b2]))
   print(f'step: {step} loss: {loss:.3f}')
-  print(tf.math.reduce_max(dl_dw1))
-  print(tf.math.reduce_max(dl_dw2))
+  # print(tf.math.reduce_max(dl_dw1))
+  # print(tf.math.reduce_max(dl_dw2))
