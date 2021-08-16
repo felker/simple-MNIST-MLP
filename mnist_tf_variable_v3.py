@@ -1,9 +1,7 @@
 import tensorflow as tf
 import numpy as np
-from keras.datasets import mnist
-from keras.utils import np_utils
 
-(X_train, y_train), (X_test, y_test) = mnist.load_data()
+(X_train, y_train), (X_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
@@ -14,11 +12,11 @@ X_test = X_test.reshape(X_test.shape[0], np.prod(X_test[0,:,:].shape))
 
 # one-hot encoding:
 nb_classes = 10
-Y_train = np_utils.to_categorical(y_train, nb_classes)
-Y_test = np_utils.to_categorical(y_test, nb_classes)
-
+Y_train = tf.keras.utils.to_categorical(y_train, nb_classes)
+Y_test = tf.keras.utils.to_categorical(y_test, nb_classes)
 X = X_train  # (60000, 784)
 Y = Y_train  # (60000, 10)
+
 intermediate_size = 256
 batch_size = 128
 learning_rate = 0.01
